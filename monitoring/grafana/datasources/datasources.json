@@ -1,0 +1,28 @@
+{
+  "datasources": [
+    {
+      "name": "Prometheus",
+      "type": "prometheus",
+      "access": "proxy",
+      "url": "http://prometheus:9090",
+      "isDefault": true,
+      "jsonData": {
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "name": "PostgreSQL",
+      "type": "postgres",
+      "url": "postgres:5432",
+      "database": "smart_traffic_db",
+      "user": "traffic_admin",
+      "secureJsonData": {
+        "password": "${POSTGRES_PASSWORD}"
+      },
+      "jsonData": {
+        "sslmode": "disable",
+        "postgresVersion": 1400
+      }
+    }
+  ]
+}

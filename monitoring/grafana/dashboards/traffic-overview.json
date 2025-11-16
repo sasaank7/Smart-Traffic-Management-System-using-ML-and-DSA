@@ -1,0 +1,127 @@
+{
+  "dashboard": {
+    "title": "Smart Traffic Management - System Overview",
+    "tags": ["traffic", "overview"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "API Request Rate",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])",
+            "legendFormat": "{{method}} {{endpoint}}"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "API Response Time",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "p95"
+          },
+          {
+            "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "p99"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Active Traffic Sensors",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 8},
+        "targets": [
+          {
+            "expr": "count(traffic_sensor_status{status=\"active\"})"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Average Traffic Density",
+        "type": "gauge",
+        "gridPos": {"h": 4, "w": 6, "x": 6, "y": 8},
+        "targets": [
+          {
+            "expr": "avg(traffic_density_vehicles_per_km)"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "ML Prediction Accuracy",
+        "type": "gauge",
+        "gridPos": {"h": 4, "w": 6, "x": 12, "y": 8},
+        "targets": [
+          {
+            "expr": "ml_prediction_accuracy_score"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Active Anomalies",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 18, "y": 8},
+        "targets": [
+          {
+            "expr": "count(traffic_anomalies{status=\"active\"})"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Traffic Density Heatmap",
+        "type": "heatmap",
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 12},
+        "targets": [
+          {
+            "expr": "traffic_density_vehicles_per_km"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "System Resource Usage",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 20},
+        "targets": [
+          {
+            "expr": "rate(container_cpu_usage_seconds_total[5m])",
+            "legendFormat": "{{container}} CPU"
+          },
+          {
+            "expr": "container_memory_usage_bytes / 1024 / 1024 / 1024",
+            "legendFormat": "{{container}} Memory (GB)"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Database Connections",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 20},
+        "targets": [
+          {
+            "expr": "postgres_connections_active",
+            "legendFormat": "Active"
+          },
+          {
+            "expr": "postgres_connections_idle",
+            "legendFormat": "Idle"
+          }
+        ]
+      }
+    ],
+    "refresh": "10s",
+    "schemaVersion": 16,
+    "version": 1
+  }
+}
