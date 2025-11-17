@@ -1,0 +1,4 @@
+# Additional Python packages for data processing
+h5py==3.10.0
+kaggle==1.5.16
+requests==2.31.0

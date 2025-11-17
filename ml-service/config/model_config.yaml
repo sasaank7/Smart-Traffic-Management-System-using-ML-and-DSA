@@ -1,0 +1,122 @@
+# ML Model Configuration
+
+lstm:
+  # LSTM Traffic Prediction Model
+  model_name: "lstm_traffic_prediction"
+  version: "v1.0"
+
+  # Architecture
+  input_features: 7  # vehicle_count, speed, occupancy, temperature, hour, day_of_week, weather
+  sequence_length: 12  # 12 time steps (1 hour with 5-min intervals)
+  hidden_size: 128
+  num_layers: 2
+  dropout: 0.2
+  output_size: 1  # predicted traffic density
+
+  # Training
+  batch_size: 32
+  learning_rate: 0.001
+  epochs: 100
+  early_stopping_patience: 10
+  validation_split: 0.2
+
+  # Data Processing
+  normalization: "minmax"  # minmax, zscore
+  time_horizon: 30  # minutes ahead to predict
+
+  # Model Paths
+  model_path: "./models/saved_models/lstm_traffic_v1.h5"
+  scaler_path: "./models/saved_models/lstm_scaler.pkl"
+  checkpoint_path: "./models/checkpoints/lstm_traffic"
+
+yolo:
+  # YOLOv8 Vehicle Detection Model
+  model_name: "yolov8_vehicle_detection"
+  version: "v8n"  # n (nano), s (small), m (medium), l (large), x (xlarge)
+
+  # Model Configuration
+  model_path: "./models/saved_models/yolov8n.pt"
+  confidence_threshold: 0.5
+  iou_threshold: 0.45
+  max_detections: 100
+
+  # Input Processing
+  input_size: 640  # 640x640 default for YOLOv8
+  device: "cpu"  # cpu or cuda
+
+  # Vehicle Classes (COCO dataset)
+  classes:
+    - car
+    - truck
+    - bus
+    - motorcycle
+    - bicycle
+
+  # Detection Settings
+  track_objects: true
+  min_track_frames: 3
+  max_track_age: 30
+
+anomaly_detection:
+  # Anomaly Detection Model
+  model_name: "isolation_forest_anomaly"
+
+  # Algorithm
+  algorithm: "isolation_forest"  # isolation_forest, autoencoder
+  contamination: 0.1  # Expected proportion of anomalies
+
+  # Features
+  features:
+    - vehicle_count_deviation
+    - speed_deviation
+    - sudden_stops
+    - density_spike
+
+  # Thresholds
+  anomaly_score_threshold: -0.5
+  confidence_threshold: 0.7
+
+congestion_classifier:
+  # Traffic Congestion Classification
+  model_name: "random_forest_congestion"
+
+  # Model
+  algorithm: "random_forest"  # random_forest, gradient_boosting, xgboost
+  n_estimators: 100
+  max_depth: 10
+
+  # Classes
+  congestion_levels:
+    low: [0, 20]  # vehicles per km
+    medium: [20, 40]
+    high: [40, 60]
+    severe: [60, 100]
+
+  # Model Path
+  model_path: "./models/saved_models/congestion_classifier.pkl"
+
+inference:
+  # Inference Settings
+  batch_processing: true
+  max_batch_size: 16
+  inference_timeout: 30  # seconds
+
+  # Caching
+  enable_caching: true
+  cache_ttl: 300  # seconds
+
+  # Performance
+  num_workers: 4
+  use_gpu: false
+  gpu_memory_fraction: 0.8
+
+monitoring:
+  # Model Monitoring
+  log_predictions: true
+  track_latency: true
+  track_accuracy: true
+
+  # Drift Detection
+  enable_drift_detection: true
+  drift_check_interval: 3600  # seconds
+  drift_threshold: 0.1
